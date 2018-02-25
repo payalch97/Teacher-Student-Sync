@@ -1,0 +1,2 @@
+It is a multithreaded program in which there are 3 student and 1 teacher process. Each student has one thing out of Pen, Paper and Question Paper.
+Depending upon the two thing provided by the teacher students complete their Assignment. It is program to synchronize between teacher and students using mutex locks.  
