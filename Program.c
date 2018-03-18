@@ -1,8 +1,23 @@
 #include<stdio.h>
 #include<pthread.h>
+pthread_mutex_t pen,paper,question_paper;
 void* teacher(void *c)
 {
     sleep(1);
+    while(1)
+    {
+        pthread_mutex_lock(&pen);
+        pthread_mutex_lock(&paper);
+        pthread_mutex_lock(&question_paper);
+
+        int r = random()%3;
+        switch(r)
+        {
+            case 0 :{pthread_mutex_unlock(&pen); pthread_mutex_unlock(&paper); break;}
+            case 1 :{pthread_mutex_unlock(&paper); pthread_mutex_unlock(&question_paper); break;}
+            case 2 :{pthread_mutex_unlock(&pen); pthread_mutex_unlock(&question_paper); break;}
+        }
+    }
 }
 
 void* stud(void *x)
