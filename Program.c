@@ -23,6 +23,12 @@ void* teacher(void *c)
 void* stud(void *x)
 {
     printf("Student is ready for Test ");
+    if(pthread_mutex_lock(&pen) && pthread_mutex_lock(&paper))
+        printf("Student completed\n");
+    if(pthread_mutex_lock(&paper) && pthread_mutex_lock(&question_paper))
+        printf("Student completed\n");
+    if(pthread_mutex_lock(&pen) && pthread_mutex_lock(&question_paper))
+        printf("Student completed\n");
 }
 
 void main()
