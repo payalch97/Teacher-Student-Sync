@@ -1,34 +1,60 @@
 #include<stdio.h>
 #include<pthread.h>
-pthread_mutex_t pen,paper,question_paper;
+#include<stdlib.h>
+
+pthread_mutex_t mut1;
+int i,resource;
+int active[5];
 void* teacher(void *c)
 {
     sleep(1);
     while(1)
     {
-        pthread_mutex_lock(&pen);
-        pthread_mutex_lock(&paper);
-        pthread_mutex_lock(&question_paper);
-
-        int r = random()%3;
-        switch(r)
+        pthread_mutex_lock(&mut1);
+        resource = random() % 3;
+        resource += 1;
+        if(active[1]==0 && active[2]==0 && active[3]==0)
+            {
+                printf("All the student completed the Test\n");
+                break;
+            }
+        switch(resource)
         {
-            case 0 :{pthread_mutex_unlock(&pen); pthread_mutex_unlock(&paper); break;}
-            case 1 :{pthread_mutex_unlock(&paper); pthread_mutex_unlock(&question_paper); break;}
-            case 2 :{pthread_mutex_unlock(&pen); pthread_mutex_unlock(&question_paper); break;}
+            case 1 :{
+                        printf("Teacher put Paper and Question Paper on Desk \n");
+                        break;
+                    }
+            case 2 :{
+                        printf("Teacher put Pen and Question Paper on Desk \n");
+                        break;
+                    }
+            case 3 :{
+                        printf("Teacher put Pen and Paper on Desk \n");
+                        break;
+                    }
         }
+        pthread_mutex_unlock(&mut1);
+        sleep(1);
     }
 }
 
 void* stud(void *x)
 {
-    printf("Student is ready for Test ");
-    if(pthread_mutex_lock(&pen) && pthread_mutex_lock(&paper))
-        printf("Student completed\n");
-    if(pthread_mutex_lock(&paper) && pthread_mutex_lock(&question_paper))
-        printf("Student completed\n");
-    if(pthread_mutex_lock(&pen) && pthread_mutex_lock(&question_paper))
-        printf("Student completed\n");
+
+    printf("Student is ready for Test having %s\n");
+    while(1)
+    {
+        pthread_mutex_lock(&mut1);
+        if(studentID == resource)
+        {
+            active[studentID]=0;
+            printf("Student completed the Test \n");
+            pthread_mutex_unlock(&mut1);
+            break;
+        }
+        pthread_mutex_unlock(&mut1);
+    }
+
 }
 
 void main()
